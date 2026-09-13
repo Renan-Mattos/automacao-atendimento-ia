@@ -1,0 +1,94 @@
+{
+  "name": "Notificação de Lead - Atendimento IA",
+  "nodes": [
+    {
+      "parameters": {
+        "inputSource": "jsonExample",
+        "jsonExample": "{\n  \"nome\": \"\",\n  \"telefone\": \"\",\n  \"email\": \"\",\n  \"interesse\": \"\",\n  \"necessidade\": \"\"\n}"
+      },
+      "type": "n8n-nodes-base.executeWorkflowTrigger",
+      "typeVersion": 1.2,
+      "position": [
+        0,
+        0
+      ],
+      "id": "3f549d8c-ec36-4188-b4c0-5c4836d2911a",
+      "name": "When Executed by Another Workflow"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "f8234d2b-780b-429e-a769-37711777e245",
+              "name": "resposta",
+              "value": "Solicitação de orçamento recebida e dados do cliente registrados com sucesso.",
+              "type": "string"
+            }
+          ]
+        },
+        "includeOtherFields": true,
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.5,
+      "position": [
+        224,
+        0
+      ],
+      "id": "7240af7a-f1f0-4e7e-b437-98498234abe6",
+      "name": "Edit Fields"
+    },
+    {
+      "parameters": {
+        "sendTo": "seu-email@exemplo.com",
+        "subject": "Novo Lead - Orçamento de Automação IA",
+        "emailType": "text",
+        "message": "=Novo lead interessado em orçamento.\n\nNome: {{ $json.nome }}\nTelefone: {{ $json.telefone }}\nE-mail: {{ $json.email }}\nInteresse: {{ $json.interesse }}\nNecessidade: {{ $json.necessidade }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.2,
+      "position": [
+        448,
+        0
+      ],
+      "id": "e9ba55b2-1c3e-4a93-91cb-e37d459af426",
+      "name": "Send a message"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "When Executed by Another Workflow": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields": {
+      "main": [
+        [
+          {
+            "node": "Send a message",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": true,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate"
+  },
+  "versionId": "5187a27e-8360-4957-8da1-7291a7abef68",
+  "nodeGroups": [],
+  "id": "dpa2idAEDPBSPz3I",
+  "tags": []
+}

@@ -1,0 +1,247 @@
+{
+  "name": "Atendimento IA - Automação WhatsApp",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "atendimento-ia",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2.1,
+      "position": [
+        0,
+        0
+      ],
+      "id": "ff016379-57b8-4275-ad21-b5d4161fb8e4",
+      "name": "Webhook"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "0aaed67c-eab6-4db0-abd5-b16791b5da89",
+              "name": "mensagem_cliente",
+              "value": "={{ $json.body.mensagem }}",
+              "type": "string"
+            },
+            {
+              "id": "4425d441-54e4-4382-bd91-598100ced045",
+              "name": "=sessionId",
+              "value": "={{ $json.body.sessionId }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.5,
+      "position": [
+        224,
+        0
+      ],
+      "id": "5580ac8b-1d10-4abe-a02b-aabd60acc11f",
+      "name": "Edit Fields"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "={{ $json.mensagem_cliente }}",
+        "options": {
+          "systemMessage": "Você é um assistente virtual de atendimento de uma empresa de tecnologia.\n\nSeu objetivo é atender clientes, entender suas necessidades e fornecer informações sobre os serviços da empresa.\n\nSERVIÇOS:\n\n* Desenvolvimento de sistemas web\n* Automação de processos\n* Integração de APIs e sistemas\n* Soluções com Inteligência Artificial\n\nCOMPORTAMENTO:\n\n* Seja educado, profissional e objetivo.\n* Responda sempre em português do Brasil.\n* Mantenha respostas naturais e fáceis de entender.\n* Entenda a necessidade do cliente antes de sugerir uma solução.\n* Faça apenas uma pergunta por vez quando precisar coletar informações.\n* Não repita perguntas que o cliente já respondeu.\n* Não invente preços, prazos, funcionalidades ou informações sobre a empresa.\n* Não invente serviços que não estejam listados acima.\n* Se não souber uma informação, informe isso claramente.\n* Evite respostas excessivamente longas.\n\nCONVERSA:\n\n* Use todas as informações já fornecidas pelo cliente durante a conversa.\n* Quando o cliente informar uma informação relevante, considere essa informação nas próximas respostas.\n* Não solicite novamente informações que já estejam disponíveis.\n* Conduza a conversa de forma gradual e natural.\n\nQUALIFICAÇÃO:\nQuando o cliente demonstrar interesse em uma solução, procure entender, quando necessário:\n\n1. Qual problema ele deseja resolver.\n2. Como o processo é realizado atualmente.\n3. Qual resultado ele espera obter.\n\nFaça essas perguntas uma por vez e somente quando a informação ainda não estiver disponível.\n\nORÇAMENTO:\nQuando o cliente demonstrar interesse em solicitar um orçamento, solicite os dados necessários para encaminhamento:\n\n* nome;\n* telefone;\n* e-mail.\n\nOs dados podem ser fornecidos juntos ou separadamente.\n\nQuando o cliente já tiver informado nome, telefone e e-mail e demonstrar interesse em orçamento, utilize a ferramenta de encaminhamento para a equipe comercial.\n\nAntes de chamar a ferramenta, verifique se os três dados estão disponíveis na conversa.\n\nAo utilizar a ferramenta, envie também:\n\n* interesse;\n* necessidade.\n\nNão diga que os dados foram enviados, registrados ou encaminhados à equipe sem que a ferramenta tenha sido executada com sucesso.\n\nSe a ferramenta for executada com sucesso, informe ao cliente que a solicitação foi encaminhada para a equipe comercial.\n\nIMPORTANTE:\n\n* Nunca invente que uma ação externa foi realizada.\n* Nunca afirme que um e-mail foi enviado ou que a equipe foi avisada sem a execução bem-sucedida da ferramenta.\n* Priorize precisão e consistência das informações.\n"
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 3.1,
+      "position": [
+        448,
+        0
+      ],
+      "id": "25cf6a4b-a8ef-4bb0-a22a-2911135e8784",
+      "name": "AI Agent"
+    },
+    {
+      "parameters": {
+        "modelName": "models/gemini-3.6-flash",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
+      "typeVersion": 1.1,
+      "position": [
+        320,
+        208
+      ],
+      "id": "8d71c684-ab0a-4fa4-9e82-f81f52140795",
+      "name": "Google Gemini Chat Model"
+    },
+    {
+      "parameters": {
+        "sessionIdType": "customKey",
+        "sessionKey": "={{ $json.sessionId }}",
+        "contextWindowLength": 10
+      },
+      "type": "@n8n/n8n-nodes-langchain.memoryBufferWindow",
+      "typeVersion": 1.4,
+      "position": [
+        464,
+        208
+      ],
+      "id": "9925243c-b246-49f0-8417-dd57be6aea20",
+      "name": "Simple Memory"
+    },
+    {
+      "parameters": {
+        "description": "Use esta ferramenta para encaminhar à equipe comercial um cliente que deseja solicitar um orçamento.\n\nChame esta ferramenta quando o cliente demonstrar interesse em solicitar um orçamento e já tiver informado nome, telefone e e-mail.\n\nEnvie os dados disponíveis do cliente nos campos correspondentes:\nnome, telefone, email, interesse e necessidade.\n\nNão chame esta ferramenta antes de o cliente demonstrar interesse em orçamento.",
+        "workflowId": {
+          "__rl": true,
+          "value": "dpa2idAEDPBSPz3I",
+          "mode": "list",
+          "cachedResultUrl": "/workflow/dpa2idAEDPBSPz3I",
+          "cachedResultName": "Notificação de Lead - Atendimento IA"
+        },
+        "workflowInputs": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "nome": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('nome', `Nome completo do cliente. Extraia o nome informado pelo cliente na conversa. Se o cliente não informar o nome, deixe vazio.`, 'string') }}",
+            "telefone": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('telefone', `Número de telefone informado pelo cliente. Extraia exatamente o número informado, mantendo DDD e formatação quando disponível. Se não informar, deixe vazio.`, 'string') }}",
+            "email": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('email', `Endereço de e-mail informado pelo cliente. Extraia exatamente o e-mail informado. Se não informar, deixe vazio.`, 'string') }}",
+            "interesse": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('interesse', `Serviço pelo qual o cliente demonstrou interesse. Resuma de forma curta com base na conversa.`, 'string') }}",
+            "necessidade": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('necessidade', `Problema ou objetivo que o cliente deseja resolver. Resuma de forma curta com base na conversa.`, 'string') }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "nome",
+              "displayName": "nome",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string",
+              "removed": false
+            },
+            {
+              "id": "telefone",
+              "displayName": "telefone",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string",
+              "removed": false
+            },
+            {
+              "id": "email",
+              "displayName": "email",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string",
+              "removed": false
+            },
+            {
+              "id": "interesse",
+              "displayName": "interesse",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string",
+              "removed": false
+            },
+            {
+              "id": "necessidade",
+              "displayName": "necessidade",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string",
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolWorkflow",
+      "typeVersion": 2.2,
+      "position": [
+        608,
+        208
+      ],
+      "id": "5b6d48aa-dd15-4cc4-834a-6a0d3f1be826",
+      "name": "Call 'Notificação de Lead - Atendimento IA'"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Webhook": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields": {
+      "main": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Google Gemini Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Simple Memory": {
+      "ai_memory": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_memory",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Call 'Notificação de Lead - Atendimento IA'": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate"
+  },
+  "versionId": "1a796370-1197-45a6-adc6-9b9a80bc7042",
+  "nodeGroups": [],
+  "id": "MAKLA25C0jaPQMPP",
+  "tags": []
+}
