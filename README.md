@@ -25,7 +25,8 @@ Solicitação de orçamento
    ↓
 Workflow de notificação
    ↓
-Gmail``` 
+Gmail
+```
 
 ## Funcionamento
 
@@ -77,11 +78,13 @@ Durante o atendimento, quando o cliente demonstra interesse em solicitar um orç
 
 ## Estrutura do projeto
 
+```text
 automacao-atendimento-ia/
 ├── README.md
 └── workflow/
     ├── atendimento-ia.json
     └── notificacao-lead.json
+```
 
 ## Próximos passos
 
