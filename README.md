@@ -25,8 +25,8 @@ Solicitação de orçamento
    ↓
 Workflow de notificação
    ↓
-Gmail
-` ``` `
+Gmail``` 
+
 ## Funcionamento
 
 O projeto é dividido em dois workflows.
