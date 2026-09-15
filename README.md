@@ -55,6 +55,28 @@ Workflow responsável pelo processamento do lead encaminhado pelo atendimento.
 - Gera uma mensagem com as informações do cliente
 - Envia a notificação através do Gmail
 
+- ## Demonstração
+
+### Resposta da IA
+
+![Resposta da IA](screenshots/01-ai-agent-resposta.png)
+
+### Memória conversacional
+
+![Memória conversacional](screenshots/02-memoria-conversacional.png)
+
+### Qualificação do cliente
+
+![Qualificação do cliente](screenshots/03-qualificacao-cliente.png)
+
+### Coleta de dados do lead
+
+![Coleta de dados do lead](screenshots/04-coleta-dados-lead.png)
+
+### Lead encaminhado
+
+![Lead encaminhado](screenshots/05-encaminhamento-lead.png)
+
 ## Tecnologias
 
 - n8n
@@ -81,9 +103,15 @@ Durante o atendimento, quando o cliente demonstra interesse em solicitar um orç
 ```text
 automacao-atendimento-ia/
 ├── README.md
-└── workflow/
-    ├── atendimento-ia.json
-    └── notificacao-lead.json
+├── workflow/
+│   ├── atendimento-ia.json
+│   └── notificacao-lead.json
+└── screenshots/
+    ├── 01-ai-agent-resposta.png
+    ├── 02-memoria-conversacional.png
+    ├── 03-qualificacao-cliente.png
+    ├── 04-coleta-dados-lead.png
+    └── 05-encaminhamento-lead.png
 ```
 
 ## Próximos passos
